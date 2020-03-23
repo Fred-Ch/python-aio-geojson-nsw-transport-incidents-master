@@ -1,6 +1,6 @@
 """NSW Transport Service Incidents constants."""
 
-ATTR_CATEGORY = "mainCategory"
+ATTR_CATEGORY = "mainCategory" 
 ATTR_DESCRIPTION = "headline"
 ATTR_OTHERADVICE = "otherAdvice"
 ATTR_GUID = "id"
