@@ -1,9 +1,5 @@
 # python-aio-geojson-nsw-transport-incidents
  
-[![Build Status](https://travis-ci.org/exxamalte/python-aio-geojson-nsw-rfs-incidents.svg)](https://travis-ci.org/exxamalte/python-aio-geojson-nsw-rfs-incidents)
-[![Coverage Status](https://coveralls.io/repos/github/exxamalte/python-aio-geojson-nsw-rfs-incidents/badge.svg?branch=master)](https://coveralls.io/github/exxamalte/python-aio-geojson-nsw-rfs-incidents?branch=master)
-[![PyPi](https://img.shields.io/pypi/v/aio-geojson-nsw-rfs-incidents.svg)](https://pypi.python.org/pypi/aio-geojson-nsw-rfs-incidents)
-[![Version](https://img.shields.io/pypi/pyversions/aio-geojson-nsw-rfs-incidents.svg)](https://pypi.python.org/pypi/aio-geojson-nsw-rfs-incidents)
 
 This library provides convenient async access to the [NSW Transport Service Live traffic status](https://opendata.transport.nsw.gov.au/dataset/live-traffic-site-status) incidents feed.
  
