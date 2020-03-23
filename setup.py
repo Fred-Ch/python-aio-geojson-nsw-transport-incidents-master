@@ -2,11 +2,11 @@ import os
 
 from setuptools import setup, find_packages
 
-NAME = "aio_geojson_nsw_rfs_incidents"
-AUTHOR = "Malte Franken"
-AUTHOR_EMAIL = "coding@subspace.de"
-DESCRIPTION = "An async GeoJSON client library for NSW Rural Fire Service Incidents."
-URL = "https://github.com/exxamalte/python-aio-geojson-nsw-rfs-incidents"
+NAME = "aio_geojson_nsw_transport_incidents"
+AUTHOR = "Fred Chauland"
+AUTHOR_EMAIL = "frederic.chauland@gmail.com"
+DESCRIPTION = "An async GeoJSON client library for NSW Transport Service Incidents."
+URL = "https://github.com/Fred-Ch/python-aio-geojson-nsw-transport-incidents-master"
 
 REQUIRES = [
     'aio_geojson_client>=0.13',
