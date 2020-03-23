@@ -1,5 +1,6 @@
 """Test for the NSW Transport Service Incidents GeoJSON feed."""
 import datetime
+import pytz
 
 import aiohttp
 import pytest
@@ -25,7 +26,7 @@ async def test_update_ok(aresponses, event_loop):
     )
 
     async with aiohttp.ClientSession(loop=event_loop) as websession:
-
+        timezone = pytz.timezone("UTC")
         feed = NswTransportServiceIncidentsFeed(websession, home_coordinates,hazard="flood-open")
         assert repr(feed) == "<NswTransportServiceIncidentsFeed(" \
                              "home=(-31.0, 151.0), " \
@@ -45,8 +46,9 @@ async def test_update_ok(aresponses, event_loop):
         assert round(abs(feed_entry.distance_to_home - 714.4), 1) == 417.9
         assert repr(feed_entry) == "<NswTransportServiceIncidents" \
                                    "FeedEntry(id=53718)>"
-        assert feed_entry.publication_date \
-            == datetime.datetime(2020, 3, 4, 13, 27, 31, 513000)
+
+        assert timezone.localize(feed_entry.publication_date) \
+            == datetime.datetime(2020, 3, 4, 13, 27, 31, 513000 , pytz.UTC)
         assert feed_entry.type == "Unplanned"
         assert feed_entry.attribution == ATTRIBUTION
 
