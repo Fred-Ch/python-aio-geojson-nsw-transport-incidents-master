@@ -35,25 +35,19 @@ async def test_update_ok(aresponses, event_loop):
         status, entries = await feed.update()
         assert status == UPDATE_OK
         assert entries is not None
-        assert len(entries) == 8
+        assert len(entries) == 5
 
         feed_entry = entries[0]
         assert feed_entry.title == "FLOODING"
         assert feed_entry.category == "Flooding"
-        assert feed_entry.external_id == 1234
+        assert feed_entry.external_id == 53718
         assert feed_entry.coordinates == (-32.212312, 148.211304)
         assert round(abs(feed_entry.distance_to_home - 714.4), 1) == 417.9
         assert repr(feed_entry) == "<NswTransportServiceIncidents" \
-                                   "FeedEntry(id=1234)>"
+                                   "FeedEntry(id=53718)>"
         assert feed_entry.publication_date \
             == datetime.datetime(2020, 3, 4, 13, 27, 31, 513000)
-        # assert feed_entry.location == None
-        # assert feed_entry.council_area == "Council 1"
-        # assert feed_entry.status == "Status 1"
         assert feed_entry.type == "Unplanned"
-        # assert feed_entry.fire
-        # assert feed_entry.size == "10 ha"
-        # assert feed_entry.responsible_agency == "Agency 1"
         assert feed_entry.attribution == ATTRIBUTION
 
         feed_entry = entries[1]
@@ -70,7 +64,7 @@ async def test_update_ok(aresponses, event_loop):
         assert feed_entry.title == "FLOODING"
         assert feed_entry.geometries is not None
         assert len(feed_entry.geometries) == 1
-        assert round(abs(feed_entry.distance_to_home - 578.5), 1) == 328.1
+        assert round(abs(feed_entry.distance_to_home - 578.5), 1) == 163.7
 
 
 @pytest.mark.asyncio
@@ -97,14 +91,14 @@ async def test_update_ok_with_categories(aresponses, event_loop):
         status, entries = await feed.update()
         assert status == UPDATE_OK
         assert entries is not None
-        assert len(entries) == 8
+        assert len(entries) == 5
 
         feed_entry = entries[0]
         assert feed_entry is not None
         assert feed_entry.title == "FLOODING"
         assert feed_entry.category == "Flooding"
         assert repr(feed_entry) == "<NswTransportServiceIncidents" \
-                                   "FeedEntry(id=1234)>"
+                                   "FeedEntry(id=53718)>"
 
 
 @pytest.mark.asyncio

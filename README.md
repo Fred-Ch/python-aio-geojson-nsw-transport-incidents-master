@@ -1,7 +1,8 @@
 # python-aio-geojson-nsw-transport-incidents
  
 
-This library provides convenient async access to the [NSW Transport Service Live traffic status](https://opendata.transport.nsw.gov.au/dataset/live-traffic-site-status) incidents feed.
+This library provides convenient async access to the [NSW Transport Service Live traffic status](https://opendata.transport.nsw.gov.au/dataset/live-traffic-site-status) incidents feed. 
+The feed can be seen online on (https://www.livetraffic.com/)
  
 ## Installation
 `pip install aio-geojson-nsw-transport-incidents`
@@ -26,6 +27,17 @@ Status Codes
 | Parameter          | Description                               |
 |--------------------|-------------------------------------------|
 | `home_coordinates` | Coordinates (tuple of latitude/longitude) |
+| `feature`          | Type of Hazard to retreive                |
+
+Traffic Hazards are divided into six basic types:
+* Incidents (`incident-open` `incident-closed` `incident`)
+* Fire  (`fire-open` `fire-closed` `fire`)
+* Flood (`flood-open` `flood-closed` `flood`)
+* Alpine conditions (`alpine-open` `alpine-closed` `alpine`)
+* Major Events (`majorevent-open` `majorevent-closed` `majorevent`)
+* Roadworks (`roadwork-open` `roadwork-closed` `roadwork`)
+
+Hazards can be open, closed (or both can be retreived). Refer to the [Live Traffic Data Developer Guide](https://opendata.transport.nsw.gov.au/sites/default/files/Live_Traffic_Data_Developer_Guide.pdf)
 
 **Supported Filters**
 
@@ -38,16 +50,18 @@ Status Codes
 ```python
 import asyncio
 from aiohttp import ClientSession
-from aio_geojson_nsw_rfs_incidents import NswRuralFireServiceIncidentsFeed
+from aio_geojson_nsw_transport_incidents import NswTransportServiceIncidentsFeed
 async def main() -> None:
     async with ClientSession() as websession:    
         # Home Coordinates: Latitude: -33.0, Longitude: 150.0
         # Filter radius: 50 km
-        # Filter categories: 'Advice'
-        feed = NswRuralFireServiceIncidentsFeed(websession, 
+        # Filter categories: 'Scheduled roadwork'
+        # Hazard type : 'roadworks-open'
+        feed = NswTransportServiceIncidentsFeed(websession, 
                                                 (-33.0, 150.0), 
                                                 filter_radius=50, 
-                                                filter_categories=['Advice'])
+                                                filter_categories=['Scheduled roadwork'],
+                                                hazard="roadwork-open")
         status, entries = await feed.update()
         print(status)
         print(entries)
@@ -65,16 +79,23 @@ Each feed entry is populated with the following properties:
 | title              | Title of this entry.                                                                                | `title`        |
 | attribution        | Attribution of the feed.                                                                            | n/a            |
 | distance_to_home   | Distance in km of this entry to the home coordinates.                                               | n/a            |
-| category           | The alert level of the incident ('Emergency Warning', 'Watch and Act', 'Advice','Not Applicable').  | `category`     |
-| publication_date   | The publication date of the incidents.                                                              | `pubDate`      |
-| description        | The description of the incident.                                                                    | `description`  |
-| location           | Location description of the incident.                                                               | `description` -> `LOCATION`            |
-| council_area       | Council are this incident falls into.                                                               | `description` -> `COUNCIL AREA`        |
-| status             | Status of the incident.                                                                             | `description` -> `STATUS`              |
-| type               | Type of the incident (e.g. Bush Fire, Grass Fire, Hazard Reduction).                                | `description` -> `TYPE`                |
-| fire               | Indicated if this incident is a fire or not (`True`/`False`).                                       | `description` -> `FIRE`                |
-| size               | Size in ha.                                                                                         | `description` -> `SIZE`                |
-| responsible_agency | Agency responsible for this incident.                                                               | `description` -> `RESPONSIBLE AGENCY`  |
+| category           | The broad hazard category description assigned to the hazard by TMC Communications. Used internally by TMCCommunications for reporting hazard statistics.Please note the values used by this property are subject to change and should not be relied upon.                                 | `mainCategory`     |
+| publication_date   | The publication date of the incidents.                                                              | `created`      |
+| description        | The description of the incident.                                                                    | `headline`  |
+| council_area       | Council are this incident falls into.                                                               | `roads` -> `suburb`        |
+| road               | Council are this incident falls into.                                                               | `roads` -> `mainStreet`        |
+| type               | Type of the incident (e.g. Bush Fire, Grass Fire, Hazard Reduction).                                | `type`         |
+| publicTransport    | The publication date of this entry                                                                  | `publicTransport`        |
+| adviceA            | The first advice of this entry. The first standard piece of advice to motorists. At the present time | `adviceA`       |
+| adviceB            | Turn the second advice of this entry                                                                | `adviceB`        |
+| adviceOther        | The other advice of this entry                                                                      | `adviceOther`        |
+| isMajor            | True is the incident is major for this entry                                                        | `isMajor`        |
+| isEnded            | True if the hazard has ended, otherwise false. Once ended, the hazard’s record in our internal tracking system is closed and further modification becomes impossible unless the record is later re-opened. This  property is a counterpart to the createdproperty. When true, the  lastUpdatedproperty of the hazard will be the date/time when  the hazard’s record  in the tracking system was closed.                                                                    | `isEnded`        |
+| isNew              | True if the incident is new for this entry.                                                         | `isNew`        |
+| isImpactNetwork    | True if the hazard is currently having some impact on traffic on the road network.                  | `isImpactNetwork`        |
+| diversions         | The Summary of any traffic diversions in place. The text may contain HTML markup..                  | `diversions`        |
+| subCategory        | The sub-category of incident of this entry.                                                         | `subCategory`        |
+| duration           | The Planned duration of the hazard. This property is rarely used.                                   | `duration`        |
 
 
 ## Feed Manager
@@ -110,3 +131,10 @@ different dates:
   This requires that the underlying feed data actually contains a suitable 
   date. This date may be useful if the consumer of this library wants to 
   process feed entries differently if they haven't actually been updated.
+
+
+## Attribution and motivation
+This is a fork of [exxamalte/python-aio-geojson-nsw-rfs-incidents](https://github.com/exxamalte/python-aio-geojson-nsw-rfs-incidents). 
+It deferes mainly as the geoJSON feeds generated by NSW Transport using QGis.  QGis generates files that don't match exactly geojson format (geometry types : `POINT` instead of `Point`)
+
+This library has been created for [Home Assistant component](https://github.com/Fred-Ch/core/tree/dev/homeassistant/components/nsw_transport_incident_service_feed).

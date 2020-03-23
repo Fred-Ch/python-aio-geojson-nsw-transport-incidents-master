@@ -52,7 +52,7 @@ class NswTransportServiceIncidentsFeedEntry(FeedEntry):
 
     @property
     def feature_type(self) -> str:
-        """Return the external id of this entry."""
+        """Return the feature_type of this entry."""
         return self._search_in_feature(ATTR_FEATURE_TYPE)
 
     @property
