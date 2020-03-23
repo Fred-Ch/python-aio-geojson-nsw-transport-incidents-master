@@ -1,5 +1,8 @@
 # python-aio-geojson-nsw-transport-incidents
  
+[![Build Status](https://travis-ci.org/Fred-Ch/python-aio-geojson-nsw-transport-incidents-master.svg)](https://travis-ci.org/Fred-Ch/python-aio-geojson-nsw-transport-incidents-master)
+[![PyPi](https://img.shields.io/pypi/v/aio-geojson-nsw-transport-incidents.svg)](https://pypi.python.org/pypi/aio-geojson-nsw-transport-incidents)
+[![Version](https://img.shields.io/pypi/pyversions/aio-geojson-nsw-transport-incidents.svg)](https://pypi.python.org/pypi/aio-geojson-nsw-transport-incidents)
 
 This library provides convenient async access to the [NSW Transport Service Live traffic status](https://opendata.transport.nsw.gov.au/dataset/live-traffic-site-status) incidents feed. 
 The feed can be seen online on (https://www.livetraffic.com/)
